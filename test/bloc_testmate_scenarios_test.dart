@@ -1,10 +1,10 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
 
+import 'login_bloc.dart';
 import 'todo_bloc.dart';
 
 void main() {
-  // Repo con un item inicial
-  final mate = BlocTestMate<TodoBloc, TodoState>()
+  final todoMate = BlocTestMate<TodoBloc, TodoState>()
       .arrange((get) {
         get.register<TodoRepo>(
           FakeTodoRepo(
@@ -15,7 +15,8 @@ void main() {
       .factory((get) => TodoBloc(get<TodoRepo>()));
 
   // ---------- READ ----------
-  mate.scenario(
+
+  todoMate.scenario(
     'load todos ok',
     when: (bloc) => bloc.add(LoadTodos()),
     wait: const Duration(milliseconds: 20),
@@ -31,7 +32,8 @@ void main() {
   );
 
   // ---------- CREATE ----------
-  mate.scenario(
+
+  todoMate.scenario(
     'create todo ok',
     when: (bloc) => bloc.add(CreateTodo('2', 'write tests')),
     wait: const Duration(milliseconds: 20),
@@ -46,7 +48,8 @@ void main() {
   );
 
   // ---------- UPDATE ----------
-  mate.scenario(
+
+  todoMate.scenario(
     'update todo ok',
     when: (bloc) => bloc.add(UpdateTodo('1', 'seed (edited)', true)),
     wait: const Duration(milliseconds: 20),
@@ -63,7 +66,8 @@ void main() {
   );
 
   // ---------- DELETE ----------
-  mate.scenario(
+
+  todoMate.scenario(
     'delete todo ok',
     when: (bloc) => bloc.add(DeleteTodo('1')),
     wait: const Duration(milliseconds: 20),
@@ -76,7 +80,8 @@ void main() {
   );
 
   // ---------- ERROR PATH ----------
-  mate.scenario(
+
+  todoMate.scenario(
     'load todos error',
     arrange: (get) => get.register<TodoRepo>(FakeTodoRepo(shouldFail: true)),
     when: (bloc) => bloc.add(LoadTodos()),
@@ -92,7 +97,7 @@ void main() {
       {'id': '11', 'title': 'B'},
     ],
     build: (row) {
-      mate.scenario(
+      todoMate.scenario(
         'create id=${row['id']}',
         when: (bloc) =>
             bloc.add(CreateTodo(row['id'] as String, row['title'] as String)),
@@ -109,5 +114,27 @@ void main() {
         ],
       );
     },
+  );
+
+  // ---------- LOGIN ----------
+  final loginMate = BlocTestMate<LoginBloc, LoginState>()
+      .arrange((get) => get.register<AuthRepo>(FakeAuthRepo(success: true)))
+      .factory((get) => LoginBloc(get<AuthRepo>()));
+
+  loginMate.scenario(
+    'login success',
+    given: () => [CredentialsEntered('a@a.com', '1234')],
+    when: (bloc) => bloc.add(SubmitPressed()),
+    wait: const Duration(milliseconds: 20),
+    expectStates: [isA<LoginLoading>(), isA<LoginSuccess>()],
+  );
+
+  loginMate.scenario(
+    'login failure',
+    arrange: (get) => get.register<AuthRepo>(FakeAuthRepo(success: false)),
+    given: () => [CredentialsEntered('a@a.com', 'bad')],
+    when: (bloc) => bloc.add(SubmitPressed()),
+    wait: const Duration(milliseconds: 20),
+    expectStates: [isA<LoginLoading>(), isA<LoginError>()],
   );
 }
