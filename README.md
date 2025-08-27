@@ -173,9 +173,3 @@ Run multiple scenarios from a row set (great for combinations).
 
 MIT – see [LICENSE](LICENSE).
 
-```
-
----
-
-👉 Do you also want me to create a **CI workflow file** (`.github/workflows/ci.yml`) so that badges for build/test status can be added along with these pub.dev ones?
-```
