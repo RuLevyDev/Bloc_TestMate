@@ -7,6 +7,9 @@ class Todo {
   final bool done;
   const Todo({required this.id, required this.title, this.done = false});
 
+  /// Returns a copy of this [Todo] with the provided fields replaced.
+  ///
+  /// If a parameter is `null`, the current value is used instead.
   Todo copyWith({String? id, String? title, bool? done}) => Todo(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -29,11 +32,16 @@ class FakeTodoRepo implements TodoRepo {
   FakeTodoRepo({this.shouldFail = false, List<Todo>? seed})
     : _store = [...?seed];
 
+  /// Simulates a short delay for each repository operation.
   Future<void> _latency() =>
       Future<void>.delayed(const Duration(milliseconds: 10));
 
+  /// Throws a [StateError] to mimic a repository failure.
   Never _throw() => throw StateError('repo-failure');
 
+  /// Retrieves all todos as an unmodifiable list.
+  ///
+  /// Throws a [StateError] if [shouldFail] is `true`.
   @override
   Future<List<Todo>> fetchAll() async {
     await _latency();
@@ -41,6 +49,9 @@ class FakeTodoRepo implements TodoRepo {
     return List.unmodifiable(_store);
   }
 
+  /// Adds [todo] to the store and returns an unmodifiable list of todos.
+  ///
+  /// Throws a [StateError] if [shouldFail] is `true`.
   @override
   Future<List<Todo>> create(Todo todo) async {
     await _latency();
@@ -49,6 +60,10 @@ class FakeTodoRepo implements TodoRepo {
     return List.unmodifiable(_store);
   }
 
+  /// Replaces the todo matching [todo.id] and returns an unmodifiable list.
+  ///
+  /// If no matching todo exists, the list is returned unchanged.
+  /// Throws a [StateError] if [shouldFail] is `true`.
   @override
   Future<List<Todo>> update(Todo todo) async {
     await _latency();
@@ -60,6 +75,9 @@ class FakeTodoRepo implements TodoRepo {
     return List.unmodifiable(_store);
   }
 
+  /// Removes the todo with [id] and returns an unmodifiable list of todos.
+  ///
+  /// Throws a [StateError] if [shouldFail] is `true`.
   @override
   Future<List<Todo>> delete(String id) async {
     await _latency();

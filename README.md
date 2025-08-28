@@ -176,6 +176,7 @@ await expectLater(stream, noMoreStates());
 - `expectStates`: Expected states or matchers.
 - `expectInitialState`: Matcher for the initial state.
 - `errors`: Expected errors.
+- `golden`: JSON file used to compare emitted state sequences.
 - `setUp` / `tearDown`: Hooks executed before/after each scenario.
 - `wait`: Delay before assertions.
 

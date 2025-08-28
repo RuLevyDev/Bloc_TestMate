@@ -5,8 +5,12 @@ abstract class LoginEvent {}
 class LoginStarted extends LoginEvent {}
 
 class CredentialsEntered extends LoginEvent {
+  /// The user's email address.
   final String email;
+
+  /// The user's password.
   final String pass;
+
   CredentialsEntered(this.email, this.pass);
 }
 
@@ -26,12 +30,18 @@ class LoginError extends LoginState {
 }
 
 abstract class AuthRepo {
+  /// Attempts to log in with the provided [email] and [pass].
+  ///
+  /// Returns `true` when authentication succeeds.
   Future<bool> login(String email, String pass);
 }
 
 class FakeAuthRepo implements AuthRepo {
   final bool success;
   FakeAuthRepo({required this.success});
+
+  /// Simulates a short network delay and returns `true` only when
+  /// [success] is `true` and the [pass] equals `'1234'`.
   @override
   Future<bool> login(String email, String pass) async {
     await Future<void>.delayed(const Duration(milliseconds: 10));
@@ -42,7 +52,10 @@ class FakeAuthRepo implements AuthRepo {
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRepo _repo;
 
+  /// Latest email entered by the user.
   String _email = '';
+
+  /// Latest password entered by the user.
   String _pass = '';
 
   LoginBloc(this._repo) : super(LoginInitial()) {
