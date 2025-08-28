@@ -23,7 +23,8 @@ void main() {
   // Ejemplo simple: login incorrecto
   mate.scenario(
     'login falla',
-    arrange: (get) => get.register<AuthRepo>(FakeAuthRepo(success: false)),
+    arrange: (get) =>
+        get.register<AuthRepo>(FakeAuthRepo(success: false), override: true),
     given: () => [CredentialsEntered('a@a.com', 'bad')],
     when: (bloc) => bloc.add(SubmitPressed()),
     wait: const Duration(milliseconds: 20),

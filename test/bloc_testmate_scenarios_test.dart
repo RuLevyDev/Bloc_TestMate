@@ -1,4 +1,5 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
+import 'package:test/test.dart';
 
 import 'login_bloc.dart';
 import 'todo_bloc.dart';
@@ -83,7 +84,8 @@ void main() {
 
   todoMate.scenario(
     'load todos error',
-    arrange: (get) => get.register<TodoRepo>(FakeTodoRepo(shouldFail: true)),
+    arrange: (get) =>
+        get.register<TodoRepo>(FakeTodoRepo(shouldFail: true), override: true),
     when: (bloc) => bloc.add(LoadTodos()),
     wait: const Duration(milliseconds: 20),
     expectStates: [isA<TodoLoading>(), isA<TodoError>()],
@@ -131,10 +133,32 @@ void main() {
 
   loginMate.scenario(
     'login failure',
-    arrange: (get) => get.register<AuthRepo>(FakeAuthRepo(success: false)),
+    arrange: (get) =>
+        get.register<AuthRepo>(FakeAuthRepo(success: false), override: true),
     given: () => [CredentialsEntered('a@a.com', 'bad')],
     when: (bloc) => bloc.add(SubmitPressed()),
     wait: const Duration(milliseconds: 20),
     expectStates: [isA<LoginLoading>(), isA<LoginError>()],
+  );
+  // ---------- HOOKS & ERRORS ----------
+  var globalSetupCalled = false;
+  var globalTearDownCalled = false;
+
+  final hooksMate = BlocTestMate<TodoBloc, TodoState>()
+      .setUp(() => globalSetupCalled = true)
+      .tearDown(() => globalTearDownCalled = true)
+      .arrange((get) => get.register<TodoRepo>(FakeTodoRepo()))
+      .factory((get) => TodoBloc(get<TodoRepo>()));
+
+  hooksMate.scenario(
+    'supports hooks, initial state and errors',
+    setUp: () => expect(globalSetupCalled, isTrue),
+    when: (bloc) async {
+      bloc.addError(StateError('boom'));
+      await Future<void>.delayed(Duration.zero);
+    },
+    expectInitialState: isA<TodoInitial>(),
+    errors: [isA<StateError>()],
+    tearDown: () => expect(globalTearDownCalled, isTrue),
   );
 }
