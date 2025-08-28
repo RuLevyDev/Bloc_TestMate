@@ -1,7 +1,10 @@
 name: bloc_testmate
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+license: MIT
+repository: https://github.com/RuLEvyDev/Bloc_TestMate
+
+
 
 environment:
   sdk: ^3.10.0-127.0.dev
