@@ -1,17 +1,17 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
 
-/// Importa tu bloc de ejemplo (puedes copiar el que está en test/login_bloc.dart)
+/// Import your example bloc (you can copy the one in test/login_bloc.dart)
 import '../test/login_bloc.dart';
 
 void main() {
   final mate = BlocTestMate<LoginBloc, LoginState>()
       .arrange((get) {
-        // Registramos un fake AuthRepo que devuelve éxito
+        // Register a fake AuthRepo that returns success
         get.register<AuthRepo>(FakeAuthRepo(success: true));
       })
       .factory((get) => LoginBloc(get<AuthRepo>()));
 
-  // Ejemplo simple: login correcto
+  // Simple example: login succeeds
   mate.scenario(
     'login ok',
     given: () => [CredentialsEntered('a@a.com', '1234')],
@@ -20,7 +20,7 @@ void main() {
     expectStates: [isA<LoginLoading>(), isA<LoginSuccess>()],
   );
 
-  // Ejemplo simple: login incorrecto
+  // Simple example: login fails
   mate.scenario(
     'login falla',
     arrange: (get) =>

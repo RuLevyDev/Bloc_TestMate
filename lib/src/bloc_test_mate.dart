@@ -5,15 +5,16 @@ import 'package:bloc_test/bloc_test.dart';
 
 import 'package:bloc_testmate/src/registry.dart';
 import 'package:test/test.dart';
+import 'package:test/test.dart' as test;
 
 typedef Arrange = void Function(TestRegistry get);
 typedef Given = List<Object> Function();
 typedef When<B> = FutureOr<void> Function(B bloc);
 typedef Hook = FutureOr<void> Function();
 
-/// Test helper orientado a escenarios para BLoC.
+/// Scenario-oriented test helper for BLoC.
 ///
-/// Ejemplo:
+/// Example:
 /// ```dart
 /// final mate = BlocTestMate<LoginBloc, LoginState>()
 ///   .arrange((get) => get.register<AuthRepo>(FakeAuthRepo()))
@@ -46,17 +47,17 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
     return this;
   }
 
-  /// Define un escenario de test en 1-2 líneas.
+  /// Defines a test scenario in 1–2 lines.
   ///
-  /// - [arrange]: sobrescribe/añade fakes para este caso.
-  /// - [given]: eventos previos (se añaden antes del `when`).
-  /// - [when]: acción a ejecutar sobre el bloc.
-  /// - [expectStates]: lista de estados o matchers esperados (bloc_test).
-  /// - [expectInitialState]: matcher para verificar el estado inicial.
-  /// - [errors]: lista de errores esperados (bloc_test).
-  /// - [setUp]: hook opcional antes de cada escenario.
-  /// - [tearDown]: hook opcional después de cada escenario.
-  /// - [wait]: delay opcional antes de aserciones.
+  /// - [arrange]: override or add fakes for this case.
+  /// - [given]: pre-events added before `when`.
+  /// - [when]: action to execute on the bloc.
+  /// - [expectStates]: list of expected states or matchers (`bloc_test`).
+  /// - [expectInitialState]: matcher to verify the initial state.
+  /// - [errors]: list of expected errors (`bloc_test`).
+  /// - [setUp]: optional hook before each scenario.
+  /// - [tearDown]: optional hook after each scenario.
+  /// - [wait]: optional delay before assertions.
   void scenario(
     String description, {
     Arrange? arrange,
@@ -94,9 +95,6 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
         }
         final events = given?.call() ?? const [];
         for (final e in events) {
-          // Estos warnings aparecen porque llamamos a add() desde test helpers.
-          // Los silenciamos a nivel de analyzer.
-          // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
           bloc.add(e);
         }
         if (when != null) {
@@ -114,8 +112,8 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
     );
   }
 
-  /// Agrupa escenarios bajo un `group()` de package:test
+  /// Groups scenarios under a `group()` from package:test.
   void group(String name, void Function() body) {
-    group(name, body);
+    test.group(name, body);
   }
 }
