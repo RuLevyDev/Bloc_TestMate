@@ -18,6 +18,7 @@ Scenario-oriented testing utilities for BLoC.
 - Global and per-scenario hooks for `setUp` and `tearDown`.
 - Data-driven tests with the `table` helper.
 - Convenience re-exports for common matchers.
+- Golden-state testing via `golden` files.
 
 ## Why BlocTestMate instead of `flutter_bloc`?
 `flutter_bloc` is the standard solution for implementing the BLoC pattern in Flutter applications. However, it does not provide specialised tools for writing concise scenario tests. `BlocTestMate` focuses purely on testing:
@@ -98,6 +99,63 @@ table(
     );
   },
 );
+```
+### 3. Golden testing
+`BlocTestMate` can persist state sequences to JSON "golden" files so that
+future runs can verify behaviour hasn't changed.
+
+Pass a `golden` filename to `mate.scenario` to automatically log the states
+and compare them against a file stored under `test/goldens/`:
+
+```dart
+mate.scenario(
+  'loads todos matches golden',
+  when: (bloc) => bloc.add(LoadTodos()),
+  wait: const Duration(milliseconds: 20),
+  golden: 'todo_success.json',
+);
+```
+
+You can also use `GoldenLogger` directly for fine-grained control:
+
+```dart
+final bloc = TodoBloc(FakeTodoRepo());
+final logger = GoldenLogger<TodoState>(bloc);
+
+bloc.add(LoadTodos());
+await Future<void>.delayed(const Duration(milliseconds: 20));
+
+logger.expectMatch('test/goldens/todo_success.json');
+await bloc.close();
+```
+
+
+## Custom matchers
+
+`BlocTestMate` ships with matchers that make stream expectations concise.
+
+### `emitsInOrderStates`
+Verifies that a stream emits the provided states in order and then completes.
+
+```dart
+final stream = Stream.fromIterable([1, 2]);
+await expectLater(stream, emitsInOrderStates([1, 2, noMoreStates()]));
+```
+
+### `emitsWhere`
+Matches the next emitted state against a custom predicate.
+
+```dart
+final stream = Stream.value(42);
+await expectLater(stream, emitsWhere((s) => s == 42));
+```
+
+### `noMoreStates`
+Asserts that a stream emits no further values and closes.
+
+```dart
+final stream = Stream<int>.empty();
+await expectLater(stream, noMoreStates());
 ```
 
 ## Parameters
