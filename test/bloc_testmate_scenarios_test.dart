@@ -1,6 +1,6 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
-import 'package:bloc_testmate/login_bloc.dart';
-import 'package:bloc_testmate/todo_bloc.dart';
+import '../example/login_bloc.dart';
+import '../example/todo_bloc.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -5,7 +5,6 @@ import 'package:bloc_test/bloc_test.dart';
 
 import 'package:bloc_testmate/src/registry.dart';
 import 'package:bloc_testmate/src/golden_logger.dart';
-import 'package:test/test.dart';
 import 'package:test/test.dart' as test;
 
 typedef Arrange = void Function(TestRegistry get);
@@ -59,7 +58,7 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
   /// - [setUp]: optional hook before each scenario.
   /// - [tearDown]: optional hook after each scenario.
   /// - [wait]: optional delay before assertions.
-  ///   /// - [golden]: optional JSON file under `test/goldens/` used for
+  /// - [golden]: optional JSON file under `test/goldens/` used for
   ///   golden-state comparison.
   void scenario(
     String description, {
@@ -71,7 +70,7 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
     Iterable<dynamic>? errors,
     Hook? setUp,
     Hook? tearDown,
-    void Function(B bloc)? verify,
+    FutureOr<void> Function(B bloc)? verify,
     Duration? wait,
     String? golden,
   }) {
@@ -99,7 +98,7 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
           logger = GoldenLogger<S>(bloc);
         }
         if (expectInitialState != null) {
-          expect(bloc.state, expectInitialState);
+          test.expect(bloc.state, expectInitialState);
         }
         final events = given?.call() ?? const [];
         for (final e in events) {
@@ -112,8 +111,8 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
       wait: wait,
       expect: expectStates == null ? null : () => expectStates,
       errors: errors == null ? null : () => errors,
-      verify: (bloc) {
-        verify?.call(bloc);
+      verify: (bloc) async {
+        await verify?.call(bloc);
         if (golden != null) {
           logger!.expectMatch('test/goldens/$golden');
         }
