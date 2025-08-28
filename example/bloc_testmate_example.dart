@@ -1,7 +1,7 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
+import 'package:bloc_testmate/login_bloc.dart';
 
 /// Import your example bloc (you can copy the one in test/login_bloc.dart)
-import '../test/login_bloc.dart';
 
 void main() {
   final mate = BlocTestMate<LoginBloc, LoginState>()

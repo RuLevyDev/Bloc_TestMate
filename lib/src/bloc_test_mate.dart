@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 
 import 'package:bloc_testmate/src/registry.dart';
+import 'package:bloc_testmate/src/golden_logger.dart';
 import 'package:test/test.dart';
 import 'package:test/test.dart' as test;
 
@@ -58,6 +59,8 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
   /// - [setUp]: optional hook before each scenario.
   /// - [tearDown]: optional hook after each scenario.
   /// - [wait]: optional delay before assertions.
+  ///   /// - [golden]: optional JSON file under `test/goldens/` used for
+  ///   golden-state comparison.
   void scenario(
     String description, {
     Arrange? arrange,
@@ -70,12 +73,14 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
     Hook? tearDown,
     void Function(B bloc)? verify,
     Duration? wait,
+    String? golden,
   }) {
     final a = _arrange;
     final f = _factory;
     if (f == null) {
       throw StateError('You must call factory() before adding scenarios');
     }
+    GoldenLogger<S>? logger;
 
     blocTest<B, S>(
       description,
@@ -90,6 +95,9 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
         return f(reg);
       },
       act: (bloc) async {
+        if (golden != null) {
+          logger = GoldenLogger<S>(bloc);
+        }
         if (expectInitialState != null) {
           expect(bloc.state, expectInitialState);
         }
@@ -102,9 +110,14 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
         }
       },
       wait: wait,
-      expect: () => expectStates ?? const [],
+      expect: expectStates == null ? null : () => expectStates,
       errors: errors == null ? null : () => errors,
-      verify: verify,
+      verify: (bloc) {
+        verify?.call(bloc);
+        if (golden != null) {
+          logger!.expectMatch('test/goldens/$golden');
+        }
+      },
       tearDown: () async {
         await _tearDown?.call();
         await tearDown?.call();

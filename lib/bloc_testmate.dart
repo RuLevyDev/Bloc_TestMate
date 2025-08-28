@@ -3,5 +3,6 @@ library;
 export 'src/bloc_test_mate.dart';
 export 'src/registry.dart';
 export 'src/table.dart';
+export 'src/golden_logger.dart';
 export 'src/matchers.dart'
     show isA, predicate, emitsInOrderStates, emitsWhere, noMoreStates;

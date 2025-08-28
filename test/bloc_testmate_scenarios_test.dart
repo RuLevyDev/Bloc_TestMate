@@ -1,8 +1,7 @@
 import 'package:bloc_testmate/bloc_testmate.dart';
+import 'package:bloc_testmate/login_bloc.dart';
+import 'package:bloc_testmate/todo_bloc.dart';
 import 'package:test/test.dart';
-
-import 'login_bloc.dart';
-import 'todo_bloc.dart';
 
 void main() {
   final todoMate = BlocTestMate<TodoBloc, TodoState>()
