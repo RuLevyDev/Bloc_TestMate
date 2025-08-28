@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 /// Matcher utilities for bloc state streams.
-///
+
 export 'package:test/test.dart' show isA, predicate;
 
 /// Matches a stream of states that emits each item from [expected] in order.
@@ -9,7 +9,7 @@ export 'package:test/test.dart' show isA, predicate;
 /// [expected] should contain concrete state instances or [Matcher] objects
 /// from `package:test`. To ensure the stream completes, include
 /// [noMoreStates] as the last matcher.
-/// /// The matcher fails if the stream emits a different sequence.
+///  The matcher fails if the stream emits a different sequence.
 StreamMatcher emitsInOrderStates(List<dynamic> expected) =>
     emitsInOrder(expected);
 
@@ -17,7 +17,7 @@ StreamMatcher emitsInOrderStates(List<dynamic> expected) =>
 ///
 /// The [test] function receives the emitted state and should return `true`
 /// when it matches the desired condition.
-/// /// The matcher completes once a matching state is emitted and fails otherwise.
+///  The matcher completes once a matching state is emitted and fails otherwise.
 StreamMatcher emitsWhere(bool Function(dynamic) test) => emits(predicate(test));
 
 /// Matches a stream which emits no further states and then closes.

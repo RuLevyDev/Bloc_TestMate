@@ -46,6 +46,22 @@ void main() {
       );
       await bloc.close();
     });
+    test('cancels subscription when golden file is missing', () async {
+      final bloc = TodoBloc(
+        FakeTodoRepo(
+          seed: const [Todo(id: '1', title: 'seed')],
+        ),
+      );
+      final logger = GoldenLogger<TodoState>(bloc);
+      expect(
+        () => logger.expectMatch('test/goldens/does_not_exist.json'),
+        throwsA(isA<TestFailure>()),
+      );
+      bloc.add(LoadTodos());
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      logger.expectMatch('test/goldens/todo_initial.json');
+      await bloc.close();
+    });
   });
 
   group('scenario golden integration', () {

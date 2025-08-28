@@ -2,7 +2,6 @@
 
 [![pub package](https://img.shields.io/pub/v/bloc_testmate.svg)](https://pub.dev/packages/bloc_testmate)
 [![likes](https://img.shields.io/pub/likes/bloc_testmate?logo=dart)](https://pub.dev/packages/bloc_testmate/score)
-[![downloads](https://img.shields.io/pub/dt/bloc_testmate.svg)](https://pub.dev/packages/bloc_testmate/score)
 [![pub points](https://img.shields.io/pub/points/bloc_testmate?logo=dart)](https://pub.dev/packages/bloc_testmate/score)
 
 
