@@ -38,4 +38,9 @@ class GoldenLogger<S> {
       unawaited(_subscription.cancel());
     }
   }
+
+  /// Cancels the internal subscription.
+  ///
+  /// Call this when `expectMatch` is not used.
+  Future<void> dispose() => _subscription.cancel();
 }

@@ -129,6 +129,17 @@ logger.expectMatch('test/goldens/todo_success.json');
 await bloc.close();
 ```
 
+If you don't call `expectMatch`, make sure to dispose the logger when it's no
+longer needed:
+
+```dart
+final logger = GoldenLogger<TodoState>(bloc);
+
+// ...
+
+await logger.dispose();
+```
+
 
 ## Custom matchers
 

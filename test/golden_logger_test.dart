@@ -17,6 +17,20 @@ void main() {
       await bloc.close();
     });
 
+    test('stops logging after dispose', () async {
+      final bloc = TodoBloc(
+        FakeTodoRepo(
+          seed: const [Todo(id: '1', title: 'seed')],
+        ),
+      );
+      final logger = GoldenLogger<TodoState>(bloc);
+      await logger.dispose();
+      bloc.add(LoadTodos());
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      logger.expectMatch('test/goldens/todo_initial.json');
+      await bloc.close();
+    });
+
     test('throws on mismatch', () async {
       final bloc = TodoBloc(
         FakeTodoRepo(
