@@ -124,7 +124,7 @@ final logger = GoldenLogger<TodoState>(bloc);
 bloc.add(LoadTodos());
 await Future<void>.delayed(const Duration(milliseconds: 20));
 
-logger.expectMatch('test/goldens/todo_success.json');
+await logger.expectMatch('test/goldens/todo_success.json');
 await bloc.close();
 ```
 

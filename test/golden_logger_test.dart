@@ -13,7 +13,7 @@ void main() {
       final logger = GoldenLogger<TodoState>(bloc);
       bloc.add(LoadTodos());
       await Future<void>.delayed(const Duration(milliseconds: 30));
-      logger.expectMatch('test/goldens/todo_success.json');
+      await logger.expectMatch('test/goldens/todo_success.json');
       await bloc.close();
     });
 
@@ -27,7 +27,7 @@ void main() {
       await logger.dispose();
       bloc.add(LoadTodos());
       await Future<void>.delayed(const Duration(milliseconds: 30));
-      logger.expectMatch('test/goldens/todo_initial.json');
+      await logger.expectMatch('test/goldens/todo_initial.json');
       await bloc.close();
     });
 
@@ -40,10 +40,27 @@ void main() {
       final logger = GoldenLogger<TodoState>(bloc);
       bloc.add(LoadTodos());
       await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(
-        () => logger.expectMatch('test/goldens/todo_failure.json'),
+      await expectLater(
+        logger.expectMatch('test/goldens/todo_failure.json'),
         throwsA(isA<TestFailure>()),
       );
+      await bloc.close();
+    });
+
+    test('cancels subscription when golden file is missing', () async {
+      final bloc = TodoBloc(
+        FakeTodoRepo(
+          seed: const [Todo(id: '1', title: 'seed')],
+        ),
+      );
+      final logger = GoldenLogger<TodoState>(bloc);
+      await expectLater(
+        logger.expectMatch('test/goldens/does_not_exist.json'),
+        throwsA(isA<TestFailure>()),
+      );
+      bloc.add(LoadTodos());
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      await logger.expectMatch('test/goldens/todo_initial.json');
       await bloc.close();
     });
     test('cancels subscription when golden file is missing', () async {

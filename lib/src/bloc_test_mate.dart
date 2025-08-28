@@ -114,7 +114,7 @@ class BlocTestMate<B extends Bloc<Object?, S>, S> {
       verify: (bloc) async {
         await verify?.call(bloc);
         if (golden != null) {
-          logger!.expectMatch('test/goldens/$golden');
+          await logger!.expectMatch('test/goldens/$golden');
         }
       },
       tearDown: () async {

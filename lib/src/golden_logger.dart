@@ -44,18 +44,19 @@ class GoldenLogger<S> {
   ///
   /// This method cancels the internal subscription once comparison is
   /// complete.
-  void expectMatch(String path) {
+  Future<void> expectMatch(String path) async {
     final encoder = const JsonEncoder.withIndent('  ');
     final actual = encoder.convert(_states);
     final file = File(path);
-    if (!file.existsSync()) {
-      fail('Missing golden file: $path');
-    }
-    final expected = encoder.convert(jsonDecode(file.readAsStringSync()));
+
     try {
+      if (!file.existsSync()) {
+        fail('Missing golden file: $path');
+      }
+      final expected = encoder.convert(jsonDecode(file.readAsStringSync()));
       expect(actual, expected);
     } finally {
-      unawaited(_subscription.cancel());
+      await _subscription.cancel();
     }
   }
 
