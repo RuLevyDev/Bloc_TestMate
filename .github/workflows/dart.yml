@@ -50,11 +50,11 @@ jobs:
       - name: Run Tests
         run: flutter test
 
-  # publish  
+  # publish  if false Disable
   publish:
     name: Publish to Pub.dev 
     needs: test_analyze
-    if: false
+    if: false 
     runs-on: ubuntu-latest
     steps:
       - name: Validate Publish

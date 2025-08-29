@@ -18,10 +18,15 @@ environment:
   sdk: ^3.9.0
   flutter: ">=3.0.0"
 
+executables:
+  bloc_testmate:
 
 dependencies:
+  analyzer: ^8.1.1
+  args: ^2.7.0
   bloc: ^9.0.0
   bloc_test: ^10.0.0
+  
   test: ^1.26.2
   
   
@@ -33,4 +38,7 @@ dev_dependencies:
   
   flutter_test:
     sdk: flutter
+  path: ^1.9.1
   
+
+

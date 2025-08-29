@@ -1,5 +1,4 @@
 import 'package:test/test.dart';
-
 /// Matcher utilities for bloc state streams.
 
 export 'package:test/test.dart' show isA, predicate;
