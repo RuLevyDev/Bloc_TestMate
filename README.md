@@ -19,14 +19,14 @@ Scenario-oriented testing utilities for BLoC.
 - Convenience re-exports for common matchers.
 - Golden-state testing via `golden` files.
 
-## Why BlocTestMate instead of `flutter_bloc`?
-`flutter_bloc` is the standard solution for implementing the BLoC pattern in Flutter applications. However, it does not provide specialised tools for writing concise scenario tests. `BlocTestMate` focuses purely on testing:
+## Why BlocTestMate instead of `bloc_test`?
+BlocTestMate builds on `bloc_test`, but adds utilities that reduce manual work when writing BLoC tests:
 
-- Reduces boilerplate compared to manually using `bloc_test` with `flutter_bloc`.
-- Uses a registry so that mocks and fakes do not leak between scenarios.
-- Supports data-driven and parameterised tests out of the box.
+- Scenario DSL lets you define a test case in one or two lines and orchestrate dependencies and actions with minimal code.
+- Lightweight registry isolates mocks and fakes between scenarios, with global or per-scenario hooks for `setUp` and `tearDown`.
+- Native support for parameterized tests with `table` and for golden-state testing of state sequences.
 
-Use `flutter_bloc` to build your app and `BlocTestMate` to test it thoroughly.
+Using `bloc_test` alone requires assembling all this infrastructure yourself (dependency registry, parameterization, golden-state handling), which leads to more boilerplate and a risk of leaking mocks. BlocTestMate automates these tasks, making complex scenario testing easier.
 
 ## Installation
 Add the package as a dev dependency to your `pubspec.yaml`:
