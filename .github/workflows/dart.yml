@@ -61,6 +61,5 @@ jobs:
         run: dart pub publish --dry-run
 
       - name: Publish to Pub.dev
-        env:
-          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
+
         run: echo "$PUB_CREDENTIALS" > ~/.pub-cache/credentials.json && dart pub publish -f
