@@ -29,17 +29,17 @@ Scenario-oriented testing utilities for BLoC.
 Use `flutter_bloc` to build your app and `BlocTestMate` to test it thoroughly.
 
 ## Installation
-Add the package to your `pubspec.yaml`:
+Add the package as a dev dependency to your `pubspec.yaml`:
 
 ```yaml
-dependencies:
+dev_dependencies:
   bloc_testmate: ^1.0.0
 ```
 
 or run:
 
 ```bash
-flutter pub add bloc_testmate
+flutter pub add bloc_testmate --dev
 ```
 
 Then install the dependencies:
@@ -50,6 +50,22 @@ flutter pub get
 ```
 
 ## Usage
+
+### Running tests
+
+Run the test suite to verify that your BLoC scenarios behave as expected.
+
+```bash
+dart test
+```
+
+If your project uses Flutter, run:
+
+```bash
+flutter test
+```
+
+These tests check state transitions, golden snapshots, and guard against regressions in your BLoCs.
 
 ### 1. Define a simple scenario
 ```dart
