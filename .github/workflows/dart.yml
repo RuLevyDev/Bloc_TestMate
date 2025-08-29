@@ -1,0 +1,66 @@
+name: CI/CD for Flutter Package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types: [created]
+
+jobs:
+  test_analyze:
+    name: Test & Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Cache Flutter SDK
+      - name: Cache Flutter SDK
+        uses: actions/cache@v3
+        with:
+          path: ~/.flutter
+          key: ${{ runner.os }}-flutter-sdk-3.x
+          restore-keys: |
+            ${{ runner.os }}-flutter-sdk-
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.x  
+          cache: true  
+
+      # Cache Dart dependencies
+      - name: Cache Dart Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-flutter-deps-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-deps-
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Analyze Code
+        run: flutter analyze
+
+      - name: Run Tests
+        run: flutter test
+
+  # publish  (DISABLED)
+  publish:
+    name: Publish to Pub.dev (DISABLED)
+    needs: test_analyze
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Publish
+        run: dart pub publish --dry-run
+
+      - name: Publish to Pub.dev
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
+        run: echo "$PUB_CREDENTIALS" > ~/.pub-cache/credentials.json && dart pub publish -f
