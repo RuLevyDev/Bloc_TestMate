@@ -50,9 +50,9 @@ jobs:
       - name: Run Tests
         run: flutter test
 
-  # publish  (DISABLED)
+  # publish  
   publish:
-    name: Publish to Pub.dev (DISABLED)
+    name: Publish to Pub.dev 
     needs: test_analyze
     if: false
     runs-on: ubuntu-latest
