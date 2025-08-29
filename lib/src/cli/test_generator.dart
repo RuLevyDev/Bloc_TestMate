@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:path/path.dart' as p;
 
-import 'bloc_scanner.dart';
+import 'package:bloc_testmate/src/cli/bloc_scanner.dart';
 
 /// Generates a basic test file for the given [bloc] using [BlocTestMate].
 ///
@@ -50,7 +51,7 @@ void main() {
 
 String _stateType(BlocInfo bloc) {
   final parsed = parseFile(
-    path: bloc.path,
+    path: p.normalize(bloc.path),
     featureSet: FeatureSet.latestLanguageVersion(),
   );
   final unit = parsed.unit;

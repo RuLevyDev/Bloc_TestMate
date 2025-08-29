@@ -29,7 +29,8 @@ class SampleBloc extends Bloc<SampleEvent, SampleState> {
 }
 ''');
 
-      final info = BlocInfo(name: 'SampleBloc', path: blocFile.path);
+      final unnormalizedPath = '${libDir.path}/../lib/sample_bloc.dart';
+      final info = BlocInfo(name: 'SampleBloc', path: unnormalizedPath);
       await generate(info, testDirectory: '${tempDir.path}/test');
 
       final generated = File('${tempDir.path}/test/sample_bloc_test.dart');
