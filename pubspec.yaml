@@ -20,14 +20,16 @@ environment:
 
 dependencies:
   bloc: ^9.0.0
-  bloc_test: ^10.0.0
+  bloc_test: ^10.0.0 
   test: ^1.26.3
+  flutter_test:
+    sdk: flutter
+  
   
 
 dev_dependencies:
 
   lints: ^6.0.0
   mocktail: ^1.0.4
-  flutter_test:
-    sdk: flutter
+ 
   
