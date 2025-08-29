@@ -9,7 +9,7 @@ issue_tracker: https://github.com/RuLEvyDev/Bloc_TestMate/issues
 
 
 environment:
-  sdk: ^3.9.1
+  sdk: ^3.9.0
   flutter: ">=3.0.0"
 
 
