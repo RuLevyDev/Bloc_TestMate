@@ -13,7 +13,7 @@ Future<void> main(List<String> arguments) async {
       help: 'Path to the configuration file.',
     );
 
-  final parser = ArgParser()..addCommand('testmate', testmateParser);
+  final parser = ArgParser()..addCommand('generate', testmateParser);
 
   late ArgResults argResults;
   try {
@@ -24,7 +24,7 @@ Future<void> main(List<String> arguments) async {
     return;
   }
 
-  if (argResults.command?.name == 'testmate') {
+  if (argResults.command?.name == 'generate') {
     final configPath = argResults.command!['config'] as String;
     final config = CliConfig.fromFile(configPath);
 
@@ -38,6 +38,6 @@ Future<void> main(List<String> arguments) async {
       await generate(bloc, testDirectory: config.output);
     }
   } else {
-    stdout.writeln('Usage: generate testmate [--config <path>]');
+    stdout.writeln('Usage: generate testmate [--config  <path>]');
   }
 }

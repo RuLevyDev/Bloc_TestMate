@@ -1,23 +1,24 @@
-# BlocTestMate
+# BlocTestMate 🧪
 
 [![pub package](https://img.shields.io/pub/v/bloc_testmate.svg)](https://pub.dev/packages/bloc_testmate)
 [![likes](https://img.shields.io/pub/likes/bloc_testmate?logo=dart)](https://pub.dev/packages/bloc_testmate/score)
 [![pub points](https://img.shields.io/pub/points/bloc_testmate?logo=dart)](https://pub.dev/packages/bloc_testmate/score)
 
 
-Scenario-oriented testing utilities for BLoC.
+Scenario-oriented testing utilities for BLoC 🎯.
 
-## Package Overview
+## Package Overview 🧭
 
 `BlocTestMate` is a Dart package that helps you write expressive, scenario-based tests for your BLoC classes. Built on top of [`bloc`](https://pub.dev/packages/bloc) and [`bloc_test`](https://pub.dev/packages/bloc_test), it lets you arrange dependencies, define actions, and assert on emitted states with minimal boilerplate. The package includes a lightweight registry for mocks, hooks for setup/teardown and helpers for data-driven testing.
 
-## Features
+## Features ✨
 - Define BLoC test scenarios in 1–2 lines with `scenario`.
 - Lightweight dependency registry to register and override fakes per test.
 - Global and per-scenario hooks for `setUp` and `tearDown`.
 - Data-driven tests with the `table` helper.
 - Convenience re-exports for common matchers.
 - Golden-state testing via `golden` files.
+ - CLI: Generate placeholder tests for discovered `Bloc<_, _>` classes.
 
 ## Why BlocTestMate instead of `bloc_test`?
 BlocTestMate builds on `bloc_test`, but adds utilities that reduce manual work when writing BLoC tests:
@@ -28,7 +29,7 @@ BlocTestMate builds on `bloc_test`, but adds utilities that reduce manual work w
 
 Using `bloc_test` alone requires assembling all this infrastructure yourself (dependency registry, parameterization, golden-state handling), which leads to more boilerplate and a risk of leaking mocks. BlocTestMate automates these tasks, making complex scenario testing easier.
 
-## Installation
+## Installation 📦
 Add the package as a dev dependency to your `pubspec.yaml`:
 
 ```yaml
@@ -49,9 +50,9 @@ dart pub get
 flutter pub get
 ```
 
-## Usage
+## Usage 🚀
 
-### Running tests
+### Running tests ▶️
 
 Run the test suite to verify that your BLoC scenarios behave as expected.
 
@@ -67,7 +68,7 @@ flutter test
 
 These tests check state transitions, golden snapshots, and guard against regressions in your BLoCs.
 
-### 1. Define a simple scenario
+### 1. Define a simple scenario 📝
 ```dart
 import 'package:bloc_testmate/bloc_testmate.dart';
 
@@ -88,7 +89,49 @@ void main() {
 }
 ```
 
-### 2. Data-driven testing with `table`
+###  🚀CLI: Generate placeholder tests 🛠️
+
+BlocTestMate includes a small CLI that scans your project for `Bloc<_, _>`
+classes and generates starter test files.
+
+1. Create a `bloc_testmate.yaml` at the project root:
+
+```yaml
+include:
+  - lib/**
+exclude:
+  - lib/generated/**
+output: test
+```
+
+2. Run the generator:
+
+```bash
+dart run bloc_testmate generate --config bloc_testmate.yaml
+```
+
+This creates placeholder tests under the configured `output` directory (by
+default `test/`). Each file includes a success and error scenario using
+`BlocTestMate`.
+
+#### Running without a config file ℹ️
+If you omit `--config` or the file does not exist, the CLI uses sensible
+defaults:
+
+- include: all Dart files under the current directory
+- exclude: none
+- output: `test`
+
+Example:
+
+```bash
+dart run bloc_testmate generate
+```
+
+With these defaults, the CLI scans the current project for classes extending
+`Bloc<_, _>` and generates starter tests into `test/`.
+
+### 2. Data-driven testing with `table` 📊
 ```dart
 table(
   'create combinations',
@@ -115,7 +158,7 @@ table(
   },
 );
 ```
-### 3. Golden testing
+### 3. Golden testing 📸
 `BlocTestMate` can persist state sequences to JSON "golden" files so that
 future runs can verify behaviour hasn't changed.
 
@@ -156,7 +199,7 @@ await logger.dispose();
 ```
 
 
-## Custom matchers
+## Custom matchers 🧩
 
 `BlocTestMate` ships with matchers that make stream expectations concise.
 
@@ -184,7 +227,7 @@ final stream = Stream<int>.empty();
 await expectLater(stream, noMoreStates());
 ```
 
-## Parameters
+## Parameters ⚙️
 - `arrange`: Override or add fakes for a scenario.
 - `given`: Events dispatched before the action.
 - `when`: Action executed on the bloc.
@@ -195,5 +238,10 @@ await expectLater(stream, noMoreStates());
 - `setUp` / `tearDown`: Hooks executed before/after each scenario.
 - `wait`: Delay before assertions.
 
-## License
+## Windows-friendly globbing 🪟
+The CLI uses POSIX-style glob matching internally and normalizes file paths so
+that patterns like `**/*.dart` and `**/ignore_bloc.dart` also match files at
+the repository root on Windows.
+
+## License 📑
 This package is open source under the MIT license. See [LICENSE](LICENSE) for details.

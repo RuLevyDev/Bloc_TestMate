@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:glob/glob.dart';
+
 import 'package:path/path.dart' as p;
+import 'package:bloc_testmate/src/cli/glob_utils.dart';
 
 /// Holds basic information about a discovered Bloc class.
 class BlocInfo {
@@ -30,29 +31,17 @@ List<BlocInfo> scan(
     return const [];
   }
 
-  // Use POSIX-style patterns to ensure cross-platform matching (esp. on Windows)
-  final posixContext = p.Context(style: p.Style.posix);
-  final includeGlobs = include
-      .map((pat) => Glob(pat, context: posixContext))
-      .toList();
-  final excludeGlobs = exclude
-      .map((pat) => Glob(pat, context: posixContext))
-      .toList();
+  // Build Globs with a POSIX context for consistent cross-platform behavior.
+  final includeGlobs = include.map(GlobUtils.glob).toList();
+  final excludeGlobs = exclude.map(GlobUtils.glob).toList();
 
   final results = <BlocInfo>[];
   final files = root.listSync(recursive: true).whereType<File>().where((f) {
     if (!f.path.endsWith('.dart')) return false;
     final relative = p.relative(f.path, from: rootDir);
-    // Normalize to POSIX separators for glob matching
-    final relPosix = relative.split(Platform.pathSeparator).join('/');
-    final relWithDot = relPosix.startsWith('./') ? relPosix : './$relPosix';
-    final relWithSlash = '/$relPosix';
-
-    bool matches(Glob g) =>
-        g.matches(relPosix) || g.matches(relWithDot) || g.matches(relWithSlash);
-
-    final isIncluded = includeGlobs.isEmpty || includeGlobs.any(matches);
-    final isExcluded = excludeGlobs.any(matches);
+    final isIncluded =
+        includeGlobs.isEmpty || GlobUtils.matchesAny(includeGlobs, relative);
+    final isExcluded = GlobUtils.matchesAny(excludeGlobs, relative);
     return isIncluded && !isExcluded;
   });
 

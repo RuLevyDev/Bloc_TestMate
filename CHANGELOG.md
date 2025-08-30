@@ -11,3 +11,10 @@
 - Flutter dev dependencie added.
 - keywords added.
 - CI ready.
+
+## 1.0.2
+
+- Add CLI generator: scan BLoCs and generate placeholder tests via `dart run bloc_testmate testmate --config bloc_testmate.yaml`.
+- Improve Windows support for include/exclude globs in the scanner (use POSIX-style matching and handle root-level files).
+- Add API docs for `BlocTestMate` library, `Arrange`, `BlocTestMate()` constructor, and the `arrange` and `factory` methods.
+

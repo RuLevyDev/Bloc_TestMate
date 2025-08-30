@@ -1,3 +1,8 @@
+/// Scenario-oriented testing utilities for BLoC.
+///
+/// This library exposes the main `BlocTestMate` API along with helpers for
+/// golden-state testing, simple data tables, a tiny test-time registry and
+/// commonly used matchers. See the README for usage examples.
 library;
 
 export 'src/bloc_test_mate.dart';

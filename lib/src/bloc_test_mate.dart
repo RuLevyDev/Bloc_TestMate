@@ -7,6 +7,10 @@ import 'package:bloc_testmate/src/registry.dart';
 import 'package:bloc_testmate/src/golden_logger.dart';
 import 'package:test/test.dart' as test;
 
+/// Callback used to register or override dependencies for a scenario.
+///
+/// Use the provided [TestRegistry] to register fakes/mocks that your BLoC
+/// under test depends on.
 typedef Arrange = void Function(TestRegistry get);
 typedef Given = List<Object> Function();
 typedef When<B> = FutureOr<void> Function(B bloc);
@@ -21,17 +25,34 @@ typedef Hook = FutureOr<void> Function();
 ///   .factory((get) => LoginBloc(get<AuthRepo>()));
 /// ```
 
+/// A small DSL to define BLoC test scenarios with minimal boilerplate.
+///
+/// Typical usage:
+/// ```dart
+/// final mate = BlocTestMate<LoginBloc, LoginState>()
+///   .arrange((get) => get.register<AuthRepo>(FakeAuthRepo()))
+///   .factory((get) => LoginBloc(get<AuthRepo>()));
+/// ```
 class BlocTestMate<B extends Bloc<Object?, S>, S> {
+  /// Creates a new [BlocTestMate] for the given BLoC and state types.
+  BlocTestMate();
   Arrange? _arrange;
   B Function(TestRegistry get)? _factory;
   Hook? _setUp;
   Hook? _tearDown;
 
+  /// Sets the default [Arrange] callback used for all scenarios.
+  ///
+  /// You can still pass an `arrange:` override to an individual [scenario].
   BlocTestMate<B, S> arrange(Arrange a) {
     _arrange = a;
     return this;
   }
 
+  /// Provides a factory that builds the BLoC under test.
+  ///
+  /// The factory receives the [TestRegistry] so it can resolve any registered
+  /// dependencies when constructing the BLoC instance.
   BlocTestMate<B, S> factory(B Function(TestRegistry get) f) {
     _factory = f;
     return this;
