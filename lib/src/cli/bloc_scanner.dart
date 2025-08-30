@@ -32,8 +32,12 @@ List<BlocInfo> scan(
 
   // Use POSIX-style patterns to ensure cross-platform matching (esp. on Windows)
   final posixContext = p.Context(style: p.Style.posix);
-  final includeGlobs = include.map((pat) => Glob(pat, context: posixContext)).toList();
-  final excludeGlobs = exclude.map((pat) => Glob(pat, context: posixContext)).toList();
+  final includeGlobs = include
+      .map((pat) => Glob(pat, context: posixContext))
+      .toList();
+  final excludeGlobs = exclude
+      .map((pat) => Glob(pat, context: posixContext))
+      .toList();
 
   final results = <BlocInfo>[];
   final files = root.listSync(recursive: true).whereType<File>().where((f) {
@@ -41,9 +45,14 @@ List<BlocInfo> scan(
     final relative = p.relative(f.path, from: rootDir);
     // Normalize to POSIX separators for glob matching
     final relPosix = relative.split(Platform.pathSeparator).join('/');
-    final isIncluded = includeGlobs.isEmpty ||
-        includeGlobs.any((g) => g.matches(relPosix));
-    final isExcluded = excludeGlobs.any((g) => g.matches(relPosix));
+    final relWithDot = relPosix.startsWith('./') ? relPosix : './$relPosix';
+    final relWithSlash = '/$relPosix';
+
+    bool matches(Glob g) =>
+        g.matches(relPosix) || g.matches(relWithDot) || g.matches(relWithSlash);
+
+    final isIncluded = includeGlobs.isEmpty || includeGlobs.any(matches);
+    final isExcluded = excludeGlobs.any(matches);
     return isIncluded && !isExcluded;
   });
 
