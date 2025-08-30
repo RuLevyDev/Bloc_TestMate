@@ -1,6 +1,6 @@
 name: bloc_testmate
 description: Package that streamlines testing for BLoCs. tiny test-oriented DI container, not boilerplate.Supports data-driven tests, helpful matchers, and async-friendly waits.
-version: 1.0.3
+version: 1.0.4
 license: MIT
 repository: https://github.com/RuLEvyDev/Bloc_TestMate
 homepage: https://github.com/RuLEvyDev/Bloc_TestMate

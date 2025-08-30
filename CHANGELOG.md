@@ -18,3 +18,8 @@
 - Improve Windows support for include/exclude globs in the scanner (use POSIX-style matching and handle root-level files).
 - Add API docs for `BlocTestMate` library, `Arrange`, `BlocTestMate()` constructor, and the `arrange` and `factory` methods.
 
+## 1.0.3
+-dart format fix
+
+## 1.0.4
+-dart format.
