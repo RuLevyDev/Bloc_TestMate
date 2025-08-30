@@ -22,7 +22,7 @@ executables:
   bloc_testmate:
 
 dependencies:
-  analyzer: ^8.1.1
+  analyzer: ^7.7.1
   args: ^2.7.0
   bloc: ^9.0.0
   bloc_test: ^10.0.0
