@@ -54,7 +54,7 @@ jobs:
   publish:
     name: Publish to Pub.dev 
     needs: test_analyze
-    if: false 
+    if: true 
     runs-on: ubuntu-latest
     steps:
       - name: Validate Publish
