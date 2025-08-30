@@ -1,27 +1,43 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:bloc_testmate/src/cli/bloc_scanner.dart';
+import 'package:bloc_testmate/src/cli/config.dart';
+import 'package:bloc_testmate/src/cli/test_generator.dart';
 
-void main(List<String> arguments) {
-  final generateParser = ArgParser()
-    ..addOption('path', defaultsTo: 'lib/', help: 'Root directory to analyze.');
+Future<void> main(List<String> arguments) async {
+  final testmateParser = ArgParser()
+    ..addOption(
+      'config',
+      defaultsTo: 'bloc_testmate.yaml',
+      help: 'Path to the configuration file.',
+    );
 
-  final parser = ArgParser()..addCommand('generate', generateParser);
+  final parser = ArgParser()..addCommand('testmate', testmateParser);
 
   late ArgResults argResults;
   try {
     argResults = parser.parse(arguments);
   } on ArgParserException catch (e) {
     stderr.writeln(e.message);
-    stderr.writeln('Usage: bloc_testmate generate [--path <path>]');
+    stderr.writeln('Usage: generate testmate [--config <path>]');
     return;
   }
 
-  if (argResults.command?.name == 'generate') {
-    final path = argResults.command!['path'] as String;
-    // Generation logic will be implemented here.
-    stdout.writeln('Generating for $path');
+  if (argResults.command?.name == 'testmate') {
+    final configPath = argResults.command!['config'] as String;
+    final config = CliConfig.fromFile(configPath);
+
+    final blocs = scan(
+      Directory.current.path,
+      include: config.include,
+      exclude: config.exclude,
+    );
+
+    for (final bloc in blocs) {
+      await generate(bloc, testDirectory: config.output);
+    }
   } else {
-    stdout.writeln('Usage: bloc_testmate generate [--path <path>]');
+    stdout.writeln('Usage: generate testmate [--config <path>]');
   }
 }
