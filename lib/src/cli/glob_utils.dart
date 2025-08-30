@@ -43,4 +43,3 @@ class GlobUtils {
     return false;
   }
 }
-
