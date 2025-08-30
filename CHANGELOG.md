@@ -23,3 +23,6 @@
 
 ## 1.0.4
 -dart format.
+
+## 1.0.5
+-analyzer upgraded , bin impl removed
