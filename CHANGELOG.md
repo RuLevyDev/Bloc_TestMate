@@ -26,3 +26,5 @@
 
 ## 1.0.5
 - analyzer upgraded , bin impl removed
+## 1.0.6
+- Expanded dependency ranges
