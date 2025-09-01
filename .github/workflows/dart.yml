@@ -19,7 +19,7 @@ jobs:
         - name: Setup Dart
           uses: dart-lang/setup-dart@v1
 
-        - name: Cache Dart Dependencies
+        - name: Cache Flutter Dependencies
           uses: actions/cache@v3
           with:
             path: |
@@ -29,7 +29,7 @@ jobs:
             restore-keys: |
               ${{ runner.os }}-dart-deps-
         - name: Install Dependencies
-          run: dart pub get
+          run: flutter pub get
 
         - name: Analyze Code
           run: dart analyze
