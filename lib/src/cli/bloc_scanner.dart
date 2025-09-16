@@ -58,7 +58,7 @@ List<BlocInfo> scan(
           continue;
         }
         final NamedType superclass = extendsClause.superclass;
-        if (superclass.name.lexeme == 'Bloc') {
+        if (superclass.name2.lexeme == 'Bloc') {
           results.add(BlocInfo(name: declaration.name.lexeme, path: file.path));
         }
       }

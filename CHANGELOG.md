@@ -28,3 +28,5 @@
 - analyzer upgraded , bin impl removed
 ## 1.0.6
 - Expanded dependency ranges
+## 1.0.7
+- Relaxed the analyzer constraint to stay compatible with Flutter's pinned `test_api` dependency.
